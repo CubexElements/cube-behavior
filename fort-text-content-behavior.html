@@ -1,11 +1,14 @@
 <link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="fort-iterator-behavior.html">
 
 <script>
   FortTextContentBehavior = {
+    behaviors:    [FortIteratorBehavior],
     getInnerText: function ()
                   {
                     var output = "";
-                    this.getEffectiveChildNodes().forEach(
+                    FortIteratorBehavior.iterate(
+                      this.getEffectiveChildNodes(),
                       function (i)
                       {
                         if(i.nodeType == 3 && i.nodeValue.trim())
