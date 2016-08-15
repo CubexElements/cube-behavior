@@ -1,0 +1,17 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<script>
+  FortIteratorBehavior = {
+    iterate: function (arr, callback)
+             {
+               var i;
+               for(i in arr)
+               {
+                 if(arr.hasOwnProperty(i))
+                 {
+                   callback(i, arr[i]);
+                 }
+               }
+             }
+  }
+</script>
