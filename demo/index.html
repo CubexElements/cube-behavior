@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
-  <title>seed-element Demo</title>
+  <title>fort-behavior Demo</title>
   <script src="../../webcomponentsjs/webcomponents-lite.min.js"></script>
   <link rel="import" href="../../polymer/polymer.html">
   <link rel="import" href="../fort-behaviors.html">
@@ -32,6 +32,8 @@
           iObject.innerHTML += '<div><strong>' + idx + ': </strong>' + value + '</div>';
         }
       );
+
+      console.debug(FortElementPathBehavior.getPath(iObject));
     }, 500
   );
 </script>
