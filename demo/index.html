@@ -19,7 +19,7 @@
     {
       var iArray = document.getElementById('iterate_array');
       FortIteratorBehavior.iterate(
-        ['one', 'two', 'three'], function (idx, value)
+        ['one', 'two', 'three'], function (value, idx)
         {
           iArray.innerHTML += '<div><strong>' + idx + ': </strong>' + value + '</div>';
         }
@@ -27,7 +27,7 @@
 
       var iObject = document.getElementById('iterate_object');
       FortIteratorBehavior.iterate(
-        {property1: 'value one', property2: 'value two'}, function (idx, value)
+        {property1: 'value one', property2: 'value two'}, function (value, idx)
         {
           iObject.innerHTML += '<div><strong>' + idx + ': </strong>' + value + '</div>';
         }
