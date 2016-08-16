@@ -4,14 +4,28 @@
   FortIteratorBehavior = {
     iterate: function (arr, callback)
              {
-               var i;
+               var i, superClass, classType = /\[object (.+)]/.exec(Object.prototype.toString.call(arr))[1];
+               switch(classType)
+               {
+                 case 'String':
+                   superClass = '';
+                   break;
+                 case 'Array':
+                   superClass = [];
+                   break;
+                 case 'Object':
+                   superClass = {};
+                   break;
+                 default:
+                   superClass = new classType.constructor;
+               }
                for(i in arr)
                {
-                 if(arr.hasOwnProperty(i))
+                 if(arr.hasOwnProperty(i) && !superClass.hasOwnProperty(i))
                  {
-                   callback(arr[i], i);
+                   callback(arr[i], i, arr);
                  }
                }
              }
-  }
+  };
 </script>

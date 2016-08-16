@@ -12,6 +12,9 @@
 
 <div id="iterate_array"></div>
 <div id="iterate_object"></div>
+<div id="iterate_elements"></div>
+<div class="ele" style="display:none">element 1</div>
+<div class="ele" style="display:none">element 2</div>
 
 <script>
   setTimeout(
@@ -30,6 +33,14 @@
         {property1: 'value one', property2: 'value two'}, function (value, idx)
         {
           iObject.innerHTML += '<div><strong>' + idx + ': </strong>' + value + '</div>';
+        }
+      );
+
+      var iElements = document.getElementById('iterate_elements');
+      FortIteratorBehavior.iterate(
+        document.getElementsByClassName('ele'), function (value, idx)
+        {
+          iElements.innerHTML += '<div><strong>' + idx + ': </strong>' + value.innerText + '</div>';
         }
       );
 
