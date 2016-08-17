@@ -1,0 +1,18 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<script>
+  FortTouchEnabledBehavior = {
+    _touchEnabled: function ()
+                   {
+                     try
+                     {
+                       document.createEvent("TouchEvent");
+                       return true;
+                     }
+                     catch(e)
+                     {
+                       return false;
+                     }
+                   }
+  }
+</script>
