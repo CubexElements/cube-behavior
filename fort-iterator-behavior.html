@@ -23,7 +23,10 @@
                {
                  if(arr.hasOwnProperty(i) && !superClass.hasOwnProperty(i))
                  {
-                   callback(arr[i], i, arr);
+                   if(callback(arr[i], i, arr) === false)
+                   {
+                     break;
+                   }
                  }
                }
              }
