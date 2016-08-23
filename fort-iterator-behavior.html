@@ -23,9 +23,10 @@
                {
                  if(arr.hasOwnProperty(i) && !superClass.hasOwnProperty(i))
                  {
-                   if(callback(arr[i], i, arr) === false)
+                   var retVal = callback(arr[i], i, arr);
+                   if(typeof(retVal) !== 'undefined')
                    {
-                     break;
+                     return retVal;
                    }
                  }
                }
