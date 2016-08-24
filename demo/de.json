@@ -1,0 +1,5 @@
+{
+  "de": {
+    "colour": "{name} ist {age}, {name} aß {banannas, plural, =0 {keine Bananen} =1 {eine Banane} other {# Bananen}} {gender, select, male {bei seinem Haus.} female {bei ihr zuhause.} other {bei ihrem Haus.}}"
+  }
+}

@@ -1,0 +1,190 @@
+<!--
+This behavior is based on the polymer app-localize-behavior
+
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-ajax/iron-ajax.html">
+<link rel="import" href="fort-iterator-behavior.html">
+<script src="../intl-messageformat/dist/intl-messageformat.min.js"></script>
+
+
+<script>
+  FortI18nBehavior = {
+    __localizationCache: {
+      requests: {}, /* One iron-request per unique resources path. */
+      messages: {}, /* Unique localized strings. Invalidated when the language, formats or resources change. */
+      ajax:     null     /* Global iron-ajax object used to request resource files. */
+    },
+    behaviors:           [
+      FortIteratorBehavior
+    ],
+    properties:          {
+      languages: {
+        type:  Array,
+        value: navigator.languages
+      },
+      /**
+       * The dictionary of localized messages, for each of the languages that
+       * are going to be used. See http://formatjs.io/guides/message-syntax/ for
+       * more information on the message syntax.
+       *
+       * For example, a valid dictionary would be:
+       * this.resources = {
+     *  'en': { 'greeting': 'Hello!' }, 'fr' : { 'greeting': 'Bonjour!' }
+     * }
+       */
+      resources: {
+        type: Object
+      },
+
+      /**
+       * The path to the dictionary of localized messages. The format is the
+       * same as the `resources` array, only saved as an external json file.
+       * Note that using a path will populate the `resources` property, and override
+       * the previous data.
+       */
+      pathToResources: {
+        type: String
+      },
+
+      /**
+       * Optional dictionary of user defined formats, as explained here:
+       * http://formatjs.io/guides/message-syntax/#custom-formats
+       *
+       * For example, a valid dictionary of formats would be:
+       * this.formats = {
+     *    number: { USD: { style: 'currency', currency: 'USD' } }
+     * }
+       */
+      formats: {
+        type:  Object,
+        value: function () { return {} }
+      },
+
+      /**
+       * Translates a string to the current `language`. Any parameters to the
+       * string should be passed in order, as follows:
+       * `i18n(stringKey, param1Name, param1Value, param2Name, param2Value)`
+       */
+      i18n: {
+        type:     Function,
+        computed: '__computeI18n(languages, resources, formats)'
+      }
+    },
+
+    loadResources: function (path)
+                   {
+                     var proto = this.constructor.prototype;
+
+                     // If the global ajax object has not been initialized, initialize and cache it.
+                     var ajax = proto.__localizationCache.ajax;
+                     if(!ajax)
+                     {
+                       ajax = proto.__localizationCache.ajax = document.createElement('iron-ajax');
+                     }
+
+                     var request = proto.__localizationCache.requests[path];
+                     if(!request)
+                     {
+                       ajax.url = path;
+                       request = ajax.generateRequest();
+
+                       request.completes.then(
+                         this.__onRequestResponse.bind(this),
+                         this.__onRequestError.bind(this)
+                       );
+
+                       // Cache the instance so that it can be reused if the same path is loaded.
+                       proto.__localizationCache.requests[path] = request;
+                     }
+                     else
+                     {
+                       request.completes.then(
+                         this.__onRequestResponse.bind(this),
+                         this.__onRequestError.bind(this)
+                       );
+                     }
+                   },
+
+    /**
+     * Returns a computed `i18n` method, based on the browser languages.
+     */
+    __computeI18n: function (languages, resources, formats)
+                   {
+                     var proto = this.constructor.prototype;
+
+                     // Everytime any of the parameters change, invalidate the strings cache.
+                     proto.__localizationCache.messages = {};
+
+                     return function ()
+                     {
+                       var key = arguments[0];
+                       if(!key || !resources || !languages)
+                       {
+                         return;
+                       }
+
+                       if(languages.indexOf('en') == -1)
+                       {
+                         languages.push('en');
+                       }
+                       var result = FortIteratorBehavior.iterate(
+                         languages, function (lang)
+                         {
+                           if(resources.hasOwnProperty(lang))
+                           {
+                             var keys = resources[lang];
+                             if(keys.hasOwnProperty(key))
+                             {
+                               return {text: keys[key], language: lang};
+                             }
+                           }
+                         }
+                       );
+                       if(result == undefined)
+                       {
+                         console.error(key + " is not currently supported in your element");
+                         return key;
+                       }
+
+                       // Cache the key/value pairs for the same language, so that we don't
+                       // do extra work if we're just reusing strings across an application.
+                       var messageKey = key + result.text;
+                       var msg = proto.__localizationCache.messages[messageKey];
+
+                       if(!msg)
+                       {
+                         msg = new IntlMessageFormat(result.text, result.language, formats);
+                         proto.__localizationCache.messages[messageKey] = msg;
+                       }
+
+                       var args = {};
+                       for(var i = 1; i < arguments.length; i += 2)
+                       {
+                         args[arguments[i]] = arguments[i + 1];
+                       }
+
+                       return msg.format(args);
+                     };
+                   },
+
+    __onRequestResponse: function (event)
+                         {
+                           this.resources = event.response;
+                           this.fire('fort-i18n-resources-loaded');
+                         },
+
+    __onRequestError: function (event)
+                      {
+                        this.fire('fort-i18n-resources-error');
+                      }
+  };
+</script>

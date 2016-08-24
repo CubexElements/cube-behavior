@@ -1,0 +1,82 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <title>fort-behavior Demo</title>
+  <script src="../../webcomponentsjs/webcomponents-lite.min.js"></script>
+  <link rel="import" href="../../polymer/polymer.html">
+  <link rel="import" href="../fort-behaviors.html">
+</head>
+<body unresolved>
+
+<x-translate></x-translate>
+<dom-module id="x-translate">
+  <template>
+
+    <strong>Translation: {{i18n('colour','name','Tom','age',34,'banannas',3,'gender','male')}}</strong>
+
+  </template>
+
+  <script>
+    Polymer(
+      {
+        is:         "x-translate",
+        behaviors:  [
+          FortI18nBehavior
+        ],
+        properties: {
+          resources: {
+            type:  Object,
+            value: {
+              'en-GB': {
+                'colour': '{name} is {age}, {name} ate {banannas, plural, =0 {no bananas} =1 {a banana} other {# bananas}} {gender, select, male {at his house.} female {at her house.} other {at their house.}}'
+              },
+              'en':    {
+                'colour': '{name} ate {banannas, plural, =0 {no bananas} =1 {a banana} other {# bananas}} {gender, select, male {at his house.} female {at her house.} other{at their house.}}'
+              },
+              'fr':    {
+                'colour': '{name} est {age}, {name} {banannas, plural, =0 {n\'y a pas de bananes} =1 {mangé une banane} other {mangé # bananes}} {gender, select, male {à son domicile.} female {chez elle.} other {à leur maison.}}'
+              }
+            }
+          }
+        }
+      }
+    );
+  </script>
+</dom-module>
+
+<hr/>
+
+<xr-translate></xr-translate>
+<dom-module id="xr-translate">
+  <template>
+
+    <strong>Remote Translation: {{i18n('colour','name','Tom','age',34,'banannas',3,'gender','male')}}</strong>
+
+  </template>
+
+  <script>
+    Polymer(
+      {
+        is:         "xr-translate",
+        behaviors:  [
+          FortI18nBehavior
+        ],
+        properties: {
+          languages: {
+            type:  Array,
+            value: ["de"]
+          }
+        },
+        attached:   function ()
+                    {
+                      this.loadResources(this.resolveUrl('de.json'));
+                    }
+      }
+    );
+  </script>
+</dom-module>
+
+</body>
+</html>
