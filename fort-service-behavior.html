@@ -1,0 +1,10 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<script>
+  FortServiceBehavior = {
+    getServiceHost: function (subDomain, port)
+                    {
+                      return subDomain + '.' + window.location.hostname.replace(/^console\./, '') + ':' + port;
+                    }
+  };
+</script>
