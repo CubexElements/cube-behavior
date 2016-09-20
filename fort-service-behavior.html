@@ -4,7 +4,9 @@
   FortServiceBehavior = {
     getServiceHost: function (subDomain, port)
                     {
-                      return subDomain + '.' + window.location.hostname.replace(/^console\./, '') + ':' + port;
+                      return (subDomain ? subDomain + '.' : '')
+                        + window.location.hostname.replace(/^console\./, '')
+                        + (port ? ':' + port : '');
                     }
   };
 </script>
