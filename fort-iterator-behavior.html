@@ -1,7 +1,8 @@
 <link rel="import" href="../polymer/polymer.html">
 
 <script>
-  FortIteratorBehavior = {
+  /** @polymerBehavior */
+  Polymer.FortIteratorBehavior = {
     iterate: function (arr, callback)
              {
                var i, superClass, classType = /\[object (.+)]/.exec(Object.prototype.toString.call(arr))[1];

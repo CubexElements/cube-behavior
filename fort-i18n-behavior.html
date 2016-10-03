@@ -17,14 +17,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 
 <script>
-  FortI18nBehavior = {
+  /** @polymerBehavior */
+  Polymer.FortI18nBehavior = {
     __localizationCache: {
       requests: {}, /* One iron-request per unique resources path. */
       messages: {}, /* Unique localized strings. Invalidated when the language, formats or resources change. */
       ajax:     null     /* Global iron-ajax object used to request resource files. */
     },
     behaviors:           [
-      FortIteratorBehavior
+      Polymer.FortIteratorBehavior
     ],
     properties:          {
       languages: {

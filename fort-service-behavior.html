@@ -1,7 +1,8 @@
 <link rel="import" href="../polymer/polymer.html">
 
 <script>
-  FortServiceBehavior = {
+  /** @polymerBehavior */
+  Polymer.FortServiceBehavior = {
     getServiceHost: function (subDomain, port)
                     {
                       port = port || window.location.port;
