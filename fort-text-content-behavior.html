@@ -2,9 +2,8 @@
 <link rel="import" href="fort-iterator-behavior.html">
 
 <script>
-  /** @polymerBehavior */
-  Polymer.FortTextContentBehavior = {
-    behaviors:    [Polymer.FortIteratorBehavior],
+  /** @polymerBehavior Polymer.FortTextContentBehavior */
+  Polymer.FortTextContentBehaviorImpl = {
     getInnerText: function ()
                   {
                     var output = "";
@@ -20,5 +19,11 @@
                     );
                     return output;
                   }
-  }
+  };
+
+  /** @polymerBehavior Polymer.FortTextContentBehavior */
+  Polymer.FortTextContentBehavior = [
+    Polymer.FortTextContentBehaviorImpl,
+    Polymer.FortIteratorBehavior
+  ];
 </script>

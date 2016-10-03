@@ -17,16 +17,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 
 <script>
-  /** @polymerBehavior */
-  Polymer.FortI18nBehavior = {
+  /** @polymerBehavior Polymer.FortI18nBehavior */
+  Polymer.FortI18nBehaviorImpl = {
     __localizationCache: {
       requests: {}, /* One iron-request per unique resources path. */
       messages: {}, /* Unique localized strings. Invalidated when the language, formats or resources change. */
       ajax:     null     /* Global iron-ajax object used to request resource files. */
     },
-    behaviors:           [
-      Polymer.FortIteratorBehavior
-    ],
     properties:          {
       languages: {
         type:  Array,
@@ -188,4 +185,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         this.fire('fort-i18n-resources-error');
                       }
   };
+
+  /** @polymerBehavior Polymer.FortI18nBehavior */
+  Polymer.FortI18nBehavior = [
+    Polymer.FortI18nBehaviorImpl,
+    Polymer.FortIteratorBehavior
+  ];
 </script>
