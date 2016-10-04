@@ -183,6 +183,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     __onRequestError: function (event)
                       {
                         this.fire('fort-i18n-resources-error');
+                      },
+
+    hydrateResources: function (resources, key, translations)
+                      {
+                        this.iterate(
+                          translations, function (translation, language)
+                          {
+                            resources[language] = resources[language] || {};
+                            resources[language][key] = translation;
+                          }
+                        );
+                        return resources;
                       }
   };
 
