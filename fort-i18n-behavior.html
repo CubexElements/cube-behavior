@@ -75,6 +75,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       i18n: {
         type:     Function,
         computed: '__computeI18n(languages, resources, formats)'
+      },
+
+      /**
+       * Concatenates a key and passes it to i18n
+       * `i18n_c4t(prefix, stringKey, suffix, param1Name, param1Value, param2Name, param2Value)`
+       */
+      i18n_c4t: {
+        type:     Function,
+        computed: '__computeI18nConcat(languages, resources, formats)'
       }
     },
 
@@ -173,6 +182,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                        return msg.format(args);
                      };
                    },
+
+    __computeI18nConcat: function (languages, resources, formats)
+                         {
+                           return function ()
+                           {
+                             var stringKey = Array.prototype.slice.call(arguments, 0, 3).join('');
+                             var args = Array.prototype.slice.call(arguments, 3);
+                             args.unshift(stringKey);
+                             return this.i18n.apply(this, args);
+                           }
+                         },
 
     __onRequestResponse: function (event)
                          {
