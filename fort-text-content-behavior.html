@@ -2,28 +2,25 @@
 <link rel="import" href="fort-iterator-behavior.html">
 
 <script>
-  /** @polymerBehavior Polymer.FortTextContentBehavior */
-  Polymer.FortTextContentBehaviorImpl = {
-    getInnerText: function ()
-                  {
-                    var output = "";
-                    this.iterate(
-                      this.getEffectiveChildNodes(),
-                      function (i)
-                      {
-                        if(i.nodeType == 3 && i.nodeValue.trim())
-                        {
-                          output += i.nodeValue.trim();
-                        }
-                      }
-                    );
-                    return output;
-                  }
-  };
-
-  /** @polymerBehavior Polymer.FortTextContentBehavior */
+  /** @polymerBehavior */
   Polymer.FortTextContentBehavior = [
-    Polymer.FortTextContentBehaviorImpl,
-    Polymer.FortIteratorBehavior
+    Polymer.FortIteratorBehavior,
+    {
+      getInnerText: function ()
+                    {
+                      var output = "";
+                      this.iterate(
+                        this.getEffectiveChildNodes(),
+                        function (i)
+                        {
+                          if(i.nodeType == 3 && i.nodeValue.trim())
+                          {
+                            output += i.nodeValue.trim();
+                          }
+                        }
+                      );
+                      return output;
+                    }
+    }
   ];
 </script>
