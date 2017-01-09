@@ -15,6 +15,8 @@
   <template>
 
     <strong>Translation: {{i18n('colour','name','Tom','age',34,'banannas',3,'gender','male')}}</strong>
+    <br/>
+    <strong>Failover: {{i18n(failovers)}}</strong>
 
   </template>
 
@@ -26,6 +28,10 @@
           Polymer.FortI18nBehavior
         ],
         properties: {
+          failovers: {
+            type:  Array,
+            value: ['missing', 'failover']
+          },
           resources: {
             type:  Object,
             value: {
@@ -33,7 +39,8 @@
                 'colour': '{name} is {age}, {name} ate {banannas, plural, =0 {no bananas} =1 {a banana} other {# bananas}} {gender, select, male {at his house.} female {at her house.} other {at their house.}}'
               },
               'en':    {
-                'colour': '{name} ate {banannas, plural, =0 {no bananas} =1 {a banana} other {# bananas}} {gender, select, male {at his house.} female {at her house.} other{at their house.}}'
+                'colour':   '{name} ate {banannas, plural, =0 {no bananas} =1 {a banana} other {# bananas}} {gender, select, male {at his house.} female {at her house.} other{at their house.}}',
+                'failover': "Failover Content"
               },
               'fr':    {
                 'colour': '{name} est {age}, {name} {banannas, plural, =0 {n\'y a pas de bananes} =1 {mangé une banane} other {mangé # bananes}} {gender, select, male {à son domicile.} female {chez elle.} other {à leur maison.}}'

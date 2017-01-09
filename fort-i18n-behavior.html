@@ -135,8 +135,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
                        return function ()
                        {
-                         var key = arguments[0];
-                         if(!key || !resources || !languages)
+                         var keys = arguments[0];
+                         if(!keys || !resources || !languages)
                          {
                            return;
                          }
@@ -145,20 +145,44 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                          {
                            languages.push('en');
                          }
-                         var result = this.iterate(
-                           languages, function (lang)
+
+                         keys = typeof keys == 'string' ? [keys] : keys;
+                         var keyResult = this.iterate(
+                           keys, function (key)
                            {
-                             if(resources.hasOwnProperty(lang))
-                             {
-                               var keys = resources[lang];
-                               if(keys.hasOwnProperty(key))
+                             var result = this.iterate(
+                               languages, function (lang)
                                {
-                                 return {text: keys[key], language: lang};
+                                 if(resources.hasOwnProperty(lang))
+                                 {
+                                   var keys = resources[lang];
+                                   if(keys.hasOwnProperty(key))
+                                   {
+                                     return {text: keys[key], language: lang};
+                                   }
+                                 }
                                }
+                             );
+                             if(result !== undefined)
+                             {
+                               return [key, result];
                              }
-                           }
+                           }.bind(this)
                          );
-                         if(result == undefined)
+
+                         var key, result = null;
+
+                         if(keyResult != undefined)
+                         {
+                           key = keyResult[0];
+                           result = keyResult[1];
+                         }
+                         else
+                         {
+                           key = keys.shift();
+                         }
+
+                         if(result == null)
                          {
                            console.error(key + " is not currently supported in your element");
                            return key;
