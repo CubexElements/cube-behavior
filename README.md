@@ -1,3 +1,3 @@
-##Fortifi Behaviors
+##Cubex Behaviors
 
 Common Behaviors

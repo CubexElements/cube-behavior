@@ -1,5 +1,5 @@
 ### Description
-<!-- Example: The `fort-foo` element causes the page to turn pink when clicked. -->
+<!-- Example: The `cube-foo` element causes the page to turn pink when clicked. -->
 
 ### Expected outcome
 
@@ -15,9 +15,9 @@
 ### Steps to reproduce
 
 <!-- Example
-1. Put a `fort-foo` element in the page.
+1. Put a `cube-foo` element in the page.
 2. Open the page in a web browser.
-3. Click the `fort-foo` element.
+3. Click the `cube-foo` element.
 -->
 
 ### Browsers Affected

@@ -12,14 +12,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../iron-ajax/iron-ajax.html">
-<link rel="import" href="fort-iterator-behavior.html">
+<link rel="import" href="cube-iterator-behavior.html">
 <script src="../intl-messageformat/dist/intl-messageformat.min.js"></script>
 
 
 <script>
   /** @polymerBehavior */
-  Polymer.FortI18nBehavior = [
-    Polymer.FortIteratorBehavior,
+  Polymer.CubeI18nBehavior = [
+    Polymer.CubeIteratorBehavior,
     {
       __localizationCache: {
         requests: {}, /* One iron-request per unique resources path. */
@@ -223,12 +223,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       __onRequestResponse: function (event)
                            {
                              this.resources = event.response;
-                             this.fire('fort-i18n-resources-loaded');
+                             this.fire('cube-i18n-resources-loaded');
                            },
 
       __onRequestError: function (event)
                         {
-                          this.fire('fort-i18n-resources-error');
+                          this.fire('cube-i18n-resources-error');
                         },
 
       hydrateResources: function (resources, key, translations)

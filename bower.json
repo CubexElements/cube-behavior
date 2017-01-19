@@ -1,5 +1,5 @@
 {
-  "name": "fort-behavior",
+  "name": "cube-behavior",
   "version": "1.0.0",
   "authors": [
     "Anonymous <anonymous@example.com>"
@@ -11,9 +11,9 @@
     "seed"
   ],
   "private": true,
-  "main": "fort-behavior.html",
+  "main": "cube-behavior.html",
   "license": "MIT",
-  "homepage": "https://github.com/FortifiElements/fort-behavior/",
+  "homepage": "https://github.com/CubexElements/cube-behavior/",
   "ignore": [
     "/.*",
     "/test/",

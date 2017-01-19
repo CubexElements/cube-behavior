@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
-  <title>fort-behavior Demo</title>
+  <title>cube-behavior Demo</title>
   <script src="../../webcomponentsjs/webcomponents-lite.min.js"></script>
   <link rel="import" href="../../polymer/polymer.html">
-  <link rel="import" href="../fort-behaviors.html">
+  <link rel="import" href="../cube-behaviors.html">
 </head>
 <body unresolved>
 
@@ -21,7 +21,7 @@
     function ()
     {
       var iArray = document.getElementById('iterate_array');
-      FortIteratorBehavior.iterate(
+      CubeIteratorBehavior.iterate(
         ['one', 'two', 'three'], function (value, idx)
         {
           iArray.innerHTML += '<div><strong>' + idx + ': </strong>' + value + '</div>';
@@ -29,7 +29,7 @@
       );
 
       var iObject = document.getElementById('iterate_object');
-      FortIteratorBehavior.iterate(
+      CubeIteratorBehavior.iterate(
         {property1: 'value one', property2: 'value two'}, function (value, idx)
         {
           iObject.innerHTML += '<div><strong>' + idx + ': </strong>' + value + '</div>';
@@ -37,14 +37,14 @@
       );
 
       var iElements = document.getElementById('iterate_elements');
-      FortIteratorBehavior.iterate(
+      CubeIteratorBehavior.iterate(
         document.getElementsByClassName('ele'), function (value, idx)
         {
           iElements.innerHTML += '<div><strong>' + idx + ': </strong>' + value.innerText + '</div>';
         }
       );
 
-      console.debug(FortElementPathBehavior.getPath(iObject));
+      console.debug(CubeElementPathBehavior.getPath(iObject));
     }, 500
   );
 </script>
