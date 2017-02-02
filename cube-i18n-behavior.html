@@ -15,7 +15,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="cube-iterator-behavior.html">
 <script src="../intl-messageformat/dist/intl-messageformat.min.js"></script>
 
-
 <script>
   /** @polymerBehavior */
   Polymer.CubeI18nBehavior = [
@@ -86,6 +85,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         i18n_c4t: {
           type:     Function,
           computed: '__computeI18nConcat(languages, resources, formats)'
+        },
+
+        /**
+         * Translates a string to the current `language`. Any parameters to the
+         * string should be passed in order, as follows:
+         * `i18n(stringKey, keyValue)`
+         */
+        i18nData: {
+          type:     Function,
+          computed: '__computeI18nData(languages, resources, formats)'
+        },
+
+        /**
+         * Concatenates a key and passes it to i18n
+         * `i18n_c4t(prefix, stringKey, suffix, keyValue)`
+         */
+        i18nData_c4t: {
+          type:     Function,
+          computed: '__computeI18nDataConcat(languages, resources, formats)'
         }
       },
 
@@ -209,6 +227,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                        };
                      },
 
+      __computeI18nData: function (languages, resources, formats)
+                         {
+                           return function ()
+                           {
+                             var stringKey = arguments[0];
+                             var args = [];
+                             for(var i in arguments[1])
+                             {
+                               if(arguments[1].hasOwnProperty(i))
+                               {
+                                 args.push(i);
+                                 args.push(arguments[1][i]);
+                               }
+                             }
+                             args.unshift(stringKey);
+                             return this.i18n.apply(this, args);
+                           }
+                         },
+
       __computeI18nConcat: function (languages, resources, formats)
                            {
                              return function ()
@@ -219,6 +256,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                return this.i18n.apply(this, args);
                              }
                            },
+
+      __computeI18nDataConcat: function (languages, resources, formats)
+                               {
+                                 return function ()
+                                 {
+                                   var stringKey = Array.prototype.slice.call(arguments, 0, 3).join('');
+                                   var args = [];
+                                   for(var i in arguments[3])
+                                   {
+                                     if(arguments[3].hasOwnProperty(i))
+                                     {
+                                       args.push(i);
+                                       args.push(arguments[3][i]);
+                                     }
+                                   }
+                                   args.unshift(stringKey);
+                                   return this.i18n.apply(this, args);
+                                 }
+                               },
 
       __onRequestResponse: function (event)
                            {
