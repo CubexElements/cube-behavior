@@ -7,7 +7,7 @@
                     {
                       port = port || window.location.port;
                       return (subDomain ? subDomain + '.' : '')
-                        + window.location.hostname.replace(/^console\./, '')
+                        + window.location.hostname.replace(/^.+?\./, '')
                         + (port ? ':' + port : '');
                     }
   };
