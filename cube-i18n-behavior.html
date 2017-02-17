@@ -290,23 +290,30 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       hydrateResources: function (data, clear)
                         {
                           var resources = clear ? {} : this.resources;
-                          this.iterate(
-                            data, function (translations, key)
-                            {
-                              if(translations !== Object(translations))
+                          if(data === Object(data))
+                          {
+                            this.iterate(
+                              data, function (translations, key)
                               {
-                                translations = {'en': translations};
-                              }
-                              this.iterate(
-                                translations, function (translation, language)
+                                if(translations !== Object(translations))
                                 {
-                                  resources[language] = resources[language] || {};
-                                  resources[language][key] = translation;
+                                  translations = {'en': translations};
                                 }
-                              );
+                                this.iterate(
+                                  translations, function (translation, language)
+                                  {
+                                    resources[language] = resources[language] || {};
+                                    resources[language][key] = translation;
+                                  }
+                                );
 
-                            }.bind(this)
-                          );
+                              }.bind(this)
+                            );
+                          }
+                          if(Object.keys(resources).length == 0)
+                          {
+                            resources = undefined;
+                          }
                           this.resources = resources;
                         }
     }
