@@ -287,16 +287,27 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                           this.fire('cube-i18n-resources-error');
                         },
 
-      hydrateResources: function (resources, key, translations)
+      hydrateResources: function (data, clear)
                         {
+                          var resources = clear ? {} : this.resources;
                           this.iterate(
-                            translations, function (translation, language)
+                            data, function (translations, key)
                             {
-                              resources[language] = resources[language] || {};
-                              resources[language][key] = translation;
-                            }
+                              if(translations !== Object(translations))
+                              {
+                                translations = {'en': translations};
+                              }
+                              this.iterate(
+                                translations, function (translation, language)
+                                {
+                                  resources[language] = resources[language] || {};
+                                  resources[language][key] = translation;
+                                }
+                              );
+
+                            }.bind(this)
                           );
-                          return resources;
+                          this.resources = resources;
                         }
     }
   ];
