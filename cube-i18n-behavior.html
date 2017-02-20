@@ -28,7 +28,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       properties:          {
         languages: {
           type:  Array,
-          value: navigator.languages
+          value: function () {return navigator.languages}
         },
         /**
          * The dictionary of localized messages, for each of the languages that
@@ -37,8 +37,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
          *
          * For example, a valid dictionary would be:
          * this.resources = {
-     *  'en': { 'greeting': 'Hello!' }, 'fr' : { 'greeting': 'Bonjour!' }
-     * }
+         *  'en': { 'greeting': 'Hello!' }, 'fr' : { 'greeting': 'Bonjour!' }
+         * }
          */
         resources: {
           type: Object
@@ -60,8 +60,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
          *
          * For example, a valid dictionary of formats would be:
          * this.formats = {
-     *    number: { USD: { style: 'currency', currency: 'USD' } }
-     * }
+         *    number: { USD: { style: 'currency', currency: 'USD' } }
+         * }
          */
         formats: {
           type:  Object,
@@ -79,31 +79,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         },
 
         /**
-         * Concatenates a key and passes it to i18n
-         * `i18n_c4t(prefix, stringKey, suffix, param1Name, param1Value, param2Name, param2Value)`
-         */
-        i18n_c4t: {
-          type:     Function,
-          computed: '__computeI18nConcat(languages, resources, formats)'
-        },
-
-        /**
          * Translates a string to the current `language`. Any parameters to the
          * string should be passed in order, as follows:
          * `i18n(stringKey, keyValue)`
          */
         i18nData: {
           type:     Function,
-          computed: '__computeI18nData(languages, resources, formats)'
-        },
-
-        /**
-         * Concatenates a key and passes it to i18n
-         * `i18n_c4t(prefix, stringKey, suffix, keyValue)`
-         */
-        i18nData_c4t: {
-          type:     Function,
-          computed: '__computeI18nDataConcat(languages, resources, formats)'
+          computed: '__computeI18nData(i18n)'
         }
       },
 
@@ -227,10 +209,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                        };
                      },
 
-      __computeI18nData: function (languages, resources, formats)
+      __computeI18nData: function (i18n)
                          {
                            return function ()
                            {
+                             if(!i18n)
+                             {
+                               return;
+                             }
+
                              var stringKey = arguments[0];
                              var args = [];
                              for(var i in arguments[1])
@@ -242,39 +229,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                }
                              }
                              args.unshift(stringKey);
-                             return this.i18n.apply(this, args);
+                             return i18n.apply(this, args);
                            }
                          },
-
-      __computeI18nConcat: function (languages, resources, formats)
-                           {
-                             return function ()
-                             {
-                               var stringKey = Array.prototype.slice.call(arguments, 0, 3).join('');
-                               var args = Array.prototype.slice.call(arguments, 3);
-                               args.unshift(stringKey);
-                               return this.i18n.apply(this, args);
-                             }
-                           },
-
-      __computeI18nDataConcat: function (languages, resources, formats)
-                               {
-                                 return function ()
-                                 {
-                                   var stringKey = Array.prototype.slice.call(arguments, 0, 3).join('');
-                                   var args = [];
-                                   for(var i in arguments[3])
-                                   {
-                                     if(arguments[3].hasOwnProperty(i))
-                                     {
-                                       args.push(i);
-                                       args.push(arguments[3][i]);
-                                     }
-                                   }
-                                   args.unshift(stringKey);
-                                   return this.i18n.apply(this, args);
-                                 }
-                               },
 
       __onRequestResponse: function (event)
                            {

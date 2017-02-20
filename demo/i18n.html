@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
   <title>cube-behavior Demo</title>
-  <script src="../../webcomponentsjs/webcomponents-lite.min.js"></script>
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
   <link rel="import" href="../../polymer/polymer.html">
   <link rel="import" href="../cube-behaviors.html">
 </head>
@@ -14,7 +14,11 @@
 <dom-module id="x-translate">
   <template>
 
+    <strong>Languages: {{languages}}</strong>
+    <br/>
     <strong>Translation: {{i18n('colour','name','Tom','age',34,'banannas',3,'gender','male')}}</strong>
+    <br/>
+    <strong>Translation Data: {{i18nData('colour',dataTest)}}</strong>
     <br/>
     <strong>Failover: {{i18n(failovers)}}</strong>
 
@@ -28,6 +32,7 @@
           Polymer.CubeI18nBehavior
         ],
         properties: {
+          dataTest:  {type: Object, value: function () {return {name: 'Tom', age: 34, banannas: 3, gender: 'male'};}},
           failovers: {
             type:  Array,
             value: ['missing', 'failover']
