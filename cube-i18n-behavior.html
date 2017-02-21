@@ -128,7 +128,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
        */
       __computeI18n: function (languages, resources, formats)
                      {
-                       var proto = this.constructor.prototype;
+                       var
+                         self = this,
+                         proto = this.constructor.prototype;
 
                        // Everytime any of the parameters change, invalidate the strings cache.
                        proto.__localizationCache.messages = {};
@@ -147,10 +149,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                          }
 
                          keys = typeof keys == 'string' ? [keys] : keys;
-                         var keyResult = this.iterate(
+                         var keyResult = self.iterate(
                            keys, function (key)
                            {
-                             var result = this.iterate(
+                             var result = self.iterate(
                                languages, function (lang)
                                {
                                  if(resources.hasOwnProperty(lang))
@@ -167,7 +169,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                              {
                                return [key, result];
                              }
-                           }.bind(this)
+                           }
                          );
 
                          var key, result = null;
@@ -246,17 +248,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       hydrateResources: function (data, clear)
                         {
-                          var resources = clear ? {} : this.resources;
+                          var
+                            self = this,
+                            resources = clear ? {} : self.resources;
                           if(data === Object(data))
                           {
-                            this.iterate(
+                            self.iterate(
                               data, function (translations, key)
                               {
                                 if(translations !== Object(translations))
                                 {
                                   translations = {'en': translations};
                                 }
-                                this.iterate(
+                                self.iterate(
                                   translations, function (translation, language)
                                   {
                                     resources[language] = resources[language] || {};
@@ -264,7 +268,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                   }
                                 );
 
-                              }.bind(this)
+                              }
                             );
                           }
                           if(Object.keys(resources).length == 0)
