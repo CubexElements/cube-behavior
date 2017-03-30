@@ -28,7 +28,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       properties:          {
         languages: {
           type:  Array,
-          value: function () {return navigator.languages}
+          value: function () {return Array.prototype.slice.call(navigator.languages)}
         },
         /**
          * The dictionary of localized messages, for each of the languages that
@@ -143,12 +143,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                            return;
                          }
 
-                         if(languages.indexOf('en') == -1)
+                         if(languages.indexOf('en') === -1)
                          {
                            languages.push('en');
                          }
 
-                         keys = typeof keys == 'string' ? [keys] : keys;
+                         keys = typeof keys === 'string' ? [keys] : keys;
                          var keyResult = self.iterate(
                            keys, function (key)
                            {
@@ -174,7 +174,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
                          var key, result = null;
 
-                         if(keyResult != undefined)
+                         if(keyResult !== undefined)
                          {
                            key = keyResult[0];
                            result = keyResult[1];
@@ -184,7 +184,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                            key = keys.shift();
                          }
 
-                         if(result == null)
+                         if(result === null)
                          {
                            console.error(key + " is not currently supported in your element");
                            return key;
@@ -271,7 +271,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                               }
                             );
                           }
-                          if(Object.keys(resources).length == 0)
+                          if(Object.keys(resources).length === 0)
                           {
                             resources = undefined;
                           }
