@@ -3,11 +3,17 @@
 <script>
   /** @polymerBehavior */
   Polymer.CubeServiceBehavior = {
-    getServiceHost: function (subDomain, port)
+    getServiceHost: function (subDomain, port, tld)
                     {
                       port = port || window.location.port;
+                      var host = window.location.hostname.replace(/^.+?\./, '');
+                      if(tld)
+                      {
+                        host = host.split('.', 2)[0] + "." + tld;
+                      }
+
                       return (subDomain ? subDomain + '.' : '')
-                        + window.location.hostname.replace(/^.+?\./, '')
+                        + host
                         + (port ? ':' + port : '');
                     }
   };
