@@ -5,6 +5,10 @@
   Polymer.CubeServiceBehavior = {
     getServiceHost: function (subDomain, port, tld)
                     {
+                      if(subDomain === "apps")
+                      {
+                        return window.location.host;
+                      }
                       port = port || window.location.port;
                       var host = window.location.hostname.replace(/^.+?\./, '');
                       if(tld)
