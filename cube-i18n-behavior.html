@@ -186,7 +186,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
                          if(result === null)
                          {
-                           console.error(key + " is not currently supported in your element");
+                           console.debug(key + " is not currently supported in your element");
                            return key;
                          }
 
@@ -267,7 +267,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                     resources[language][key] = translation;
                                   }
                                 );
-
                               }
                             );
                           }
