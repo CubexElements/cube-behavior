@@ -81,15 +81,31 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         /**
          * Translates a string to the current `language`. Any parameters to the
          * string should be passed in order, as follows:
-         * `i18n(stringKey, keyValue)`
+         * `i18nResource(resources, param1Name, param1Value, param2Name, param2Value)`
          */
-        i18nData:     {
-          type:     Function,
-          computed: '__computeI18nData(i18n)'
-        },
         i18nResource: {
           type:     Function,
           computed: '__computeI18nResource(languages, formats)'
+        },
+
+        /**
+         * Translates a string to the current `language`. Any parameters to the
+         * string should be passed in an object, as follows:
+         * `i18n(stringKey, keyValue)`
+         */
+        i18nData: {
+          type:     Function,
+          computed: '__computeI18nData(i18n)'
+        },
+
+        /**
+         * Translates a string to the current `language`. Any parameters to the
+         * string should be passed in an object, as follows:
+         * `i18n(resources, keyValue)`
+         */
+        i18nResourceData: {
+          type:     Function,
+          computed: '__computeI18nData(i18nResource)'
         }
       },
 
@@ -125,26 +141,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                            this.__onRequestError.bind(this)
                          );
                        }
-                     },
-
-      /**
-       * Returns a computed `i18n` method, based on the browser languages.
-       */
-      __computeI18n: function (languages, resources, formats)
-                     {
-                       var
-                         self = this,
-                         proto = this.constructor.prototype;
-
-                       // Everytime any of the parameters change, invalidate the strings cache.
-                       proto.__localizationCache.messages = {};
-
-                       return function ()
-                       {
-                         return self.__getTranslation(
-                           arguments, resources, languages, formats, proto.__localizationCache
-                         )
-                       };
                      },
 
       __getTranslation: function (passedArguments, resources, languages, formats, cache)
@@ -230,6 +226,56 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                           return msg.format(args);
                         },
 
+      /**
+       * Returns a computed `i18n` method, based on the browser languages.
+       */
+      __computeI18n: function (languages, resources, formats)
+                     {
+                       var
+                         self = this,
+                         proto = this.constructor.prototype;
+
+                       // Everytime any of the parameters change, invalidate the strings cache.
+                       proto.__localizationCache.messages = {};
+
+                       return function ()
+                       {
+                         return self.__getTranslation(
+                           arguments, resources, languages, formats, proto.__localizationCache
+                         )
+                       };
+                     },
+
+      __computeI18nResource: function (languages, formats)
+                             {
+                               var
+                                 self = this;
+                               return function ()
+                               {
+                                 var args = [];
+                                 for(var i in arguments)
+                                 {
+                                   if(arguments.hasOwnProperty(i))
+                                   {
+                                     args.push(arguments[i]);
+                                   }
+                                 }
+                                 var resources = args.shift();
+                                 args.unshift('_cube_res_key_');
+
+                                 var newResources = {};
+                                 for(i in resources)
+                                 {
+                                   if(resources.hasOwnProperty(i))
+                                   {
+                                     newResources[i] = {};
+                                     newResources[i]['_cube_res_key_'] = resources[i];
+                                   }
+                                 }
+                                 return self.__getTranslation(args, newResources, languages, formats);
+                               };
+                             },
+
       __computeI18nData: function (i18n)
                          {
                            return function ()
@@ -264,36 +310,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         {
                           this.fire('cube-i18n-resources-error');
                         },
-
-      __computeI18nResource: function (languages, formats)
-                             {
-                               var
-                                 self = this;
-                               return function ()
-                               {
-                                 var args = [];
-                                 for(var i in arguments)
-                                 {
-                                   if(arguments.hasOwnProperty(i))
-                                   {
-                                     args.push(arguments[i]);
-                                   }
-                                 }
-                                 var resources = args.shift();
-                                 args.unshift('_cube_res_key_');
-
-                                 var newResources = {};
-                                 for(i in resources)
-                                 {
-                                   if(resources.hasOwnProperty(i))
-                                   {
-                                     newResources[i] = {};
-                                     newResources[i]['_cube_res_key_'] = resources[i];
-                                   }
-                                 }
-                                 return self.__getTranslation(args, newResources, languages, formats);
-                               };
-                             },
 
       hydrateResources: function (data, clear)
                         {
