@@ -21,6 +21,8 @@
     <strong>Translation Data: {{i18nData('colour',dataTest)}}</strong>
     <br/>
     <strong>Failover: {{i18n(failovers)}}</strong>
+    <br/>
+    <strong>Custom Resources: {{i18nResource(customResource,'name','Tom','age',34)}}</strong>
 
   </template>
 
@@ -32,12 +34,21 @@
           Polymer.CubeI18nBehavior
         ],
         properties: {
-          dataTest:  {type: Object, value: function () {return {name: 'Tom', age: 34, banannas: 3, gender: 'male'};}},
-          failovers: {
+          dataTest:       {
+            type:  Object,
+            value: function () {return {name: 'Tom', age: 34, banannas: 3, gender: 'male'};}
+          },
+          failovers:      {
             type:  Array,
             value: ['missing', 'failover']
           },
-          resources: {
+          customResource: {
+            type:  Object,
+            value: {
+              'en': '{name} is {age}'
+            }
+          },
+          resources:      {
             type:  Object,
             value: {
               'en-GB': {

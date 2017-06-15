@@ -83,9 +83,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
          * string should be passed in order, as follows:
          * `i18n(stringKey, keyValue)`
          */
-        i18nData: {
+        i18nData:     {
           type:     Function,
           computed: '__computeI18nData(i18n)'
+        },
+        i18nResource: {
+          type:     Function,
+          computed: '__computeI18nResource(languages, formats)'
         }
       },
 
@@ -137,79 +141,94 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
                        return function ()
                        {
-                         var keys = arguments[0];
-                         if(!keys || !resources || !languages)
-                         {
-                           return;
-                         }
-
-                         if(languages.indexOf('en') === -1)
-                         {
-                           languages.push('en');
-                         }
-
-                         keys = typeof keys === 'string' ? [keys] : keys;
-                         var keyResult = self.iterate(
-                           keys, function (key)
-                           {
-                             var result = self.iterate(
-                               languages, function (lang)
-                               {
-                                 if(resources.hasOwnProperty(lang))
-                                 {
-                                   var keys = resources[lang];
-                                   if(keys.hasOwnProperty(key))
-                                   {
-                                     return {text: keys[key], language: lang};
-                                   }
-                                 }
-                               }
-                             );
-                             if(result !== undefined)
-                             {
-                               return [key, result];
-                             }
-                           }
-                         );
-
-                         var key, result = null;
-
-                         if(keyResult !== undefined)
-                         {
-                           key = keyResult[0];
-                           result = keyResult[1];
-                         }
-                         else
-                         {
-                           key = keys.shift();
-                         }
-
-                         if(result === null)
-                         {
-                           console.debug(key + " is not currently supported in your element");
-                           return key;
-                         }
-
-                         // Cache the key/value pairs for the same language, so that we don't
-                         // do extra work if we're just reusing strings across an application.
-                         var messageKey = key + result.text;
-                         var msg = proto.__localizationCache.messages[messageKey];
-
-                         if(!msg)
-                         {
-                           msg = new IntlMessageFormat(result.text, result.language, formats);
-                           proto.__localizationCache.messages[messageKey] = msg;
-                         }
-
-                         var args = {};
-                         for(var i = 1; i < arguments.length; i += 2)
-                         {
-                           args[arguments[i]] = arguments[i + 1];
-                         }
-
-                         return msg.format(args);
+                         return self.__getTranslation(
+                           arguments, resources, languages, formats, proto.__localizationCache
+                         )
                        };
                      },
+
+      __getTranslation: function (passedArguments, resources, languages, formats, cache)
+                        {
+                          var
+                            self = this,
+                            keys = passedArguments[0];
+
+                          if(!keys || !resources || !languages)
+                          {
+                            return;
+                          }
+
+                          if(languages.indexOf('en') === -1)
+                          {
+                            languages.push('en');
+                          }
+
+                          keys = typeof keys === 'string' ? [keys] : keys;
+                          var keyResult = self.iterate(
+                            keys, function (key)
+                            {
+                              var result = self.iterate(
+                                languages, function (lang)
+                                {
+                                  if(resources.hasOwnProperty(lang))
+                                  {
+                                    var inKeys = resources[lang];
+                                    if(inKeys.hasOwnProperty(key))
+                                    {
+                                      return {text: inKeys[key], language: lang};
+                                    }
+                                  }
+                                }
+                              );
+                              if(result !== undefined)
+                              {
+                                return [key, result];
+                              }
+                            }
+                          );
+
+                          var key, result = null;
+
+                          if(keyResult !== undefined)
+                          {
+                            key = keyResult[0];
+                            result = keyResult[1];
+                          }
+                          else
+                          {
+                            key = keys.shift();
+                          }
+
+                          if(result === null)
+                          {
+                            console.debug(key + " is not currently supported in your element");
+                            return key;
+                          }
+
+                          // Cache the key/value pairs for the same language, so that we don't
+                          // do extra work if we're just reusing strings across an application.
+                          var messageKey = key + result.text, msg;
+                          if(cache)
+                          {
+                            msg = cache.messages[messageKey];
+                          }
+
+                          if(!msg)
+                          {
+                            msg = new IntlMessageFormat(result.text, result.language, formats);
+                            if(cache)
+                            {
+                              cache.messages[messageKey] = msg;
+                            }
+                          }
+
+                          var args = {};
+                          for(var i = 1; i < passedArguments.length; i += 2)
+                          {
+                            args[passedArguments[i]] = passedArguments[i + 1];
+                          }
+                          return msg.format(args);
+                        },
 
       __computeI18nData: function (i18n)
                          {
@@ -245,6 +264,36 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         {
                           this.fire('cube-i18n-resources-error');
                         },
+
+      __computeI18nResource: function (languages, formats)
+                             {
+                               var
+                                 self = this;
+                               return function ()
+                               {
+                                 var args = [];
+                                 for(var i in arguments)
+                                 {
+                                   if(arguments.hasOwnProperty(i))
+                                   {
+                                     args.push(arguments[i]);
+                                   }
+                                 }
+                                 var resources = args.shift();
+                                 args.unshift('_cube_res_key_');
+
+                                 var newResources = {};
+                                 for(i in resources)
+                                 {
+                                   if(resources.hasOwnProperty(i))
+                                   {
+                                     newResources[i] = {};
+                                     newResources[i]['_cube_res_key_'] = resources[i];
+                                   }
+                                 }
+                                 return self.__getTranslation(args, newResources, languages, formats);
+                               };
+                             },
 
       hydrateResources: function (data, clear)
                         {
