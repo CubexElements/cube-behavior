@@ -1,0 +1,11 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<script>
+  /** @polymerBehavior */
+  Polymer.CubeLogBehavior = {
+    __log: function ()
+           {
+             Function.apply.call(console.log, console, Array.prototype.slice.call(arguments))
+           }
+  };
+</script>
