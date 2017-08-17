@@ -16,6 +16,11 @@
                         host = host.split('.', 2)[0] + "." + tld;
                       }
 
+                      if(subDomain === "cdn")
+                      {
+                        subDomain = "storage.googleapis.com/" + subDomain
+                      }
+
                       return (subDomain ? subDomain + '.' : '')
                         + host
                         + (port ? ':' + port : '');
