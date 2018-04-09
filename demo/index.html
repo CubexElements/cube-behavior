@@ -4,9 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
   <title>cube-behavior Demo</title>
-  <script src="../../webcomponentsjs/webcomponents-lite.min.js"></script>
-  <link rel="import" href="../../polymer/polymer.html">
-  <link rel="import" href="../cube-behaviors.html">
+  <script src="../../@webcomponents/webcomponentsjs/webcomponents-lite.js"></script>
+  <script type="module" src="../cube-iterator-behavior.js"></script>
+  <script type="module" src="../cube-element-path-behavior.js"></script>
 </head>
 <body unresolved>
 
@@ -17,29 +17,28 @@
 <div class="ele" style="display:none">element 2</div>
 
 <script>
+  import {CubeIteratorBehavior} from "../cube-iterator-behavior";
+  import {CubeElementPathBehavior} from "../cube-element-path-behavior";
+
   setTimeout(
-    function ()
-    {
-      var iArray = document.getElementById('iterate_array');
+    function () {
+      let iArray = document.getElementById('iterate_array');
       CubeIteratorBehavior.iterate(
-        ['one', 'two', 'three'], function (value, idx)
-        {
+        ['one', 'two', 'three'], function (value, idx) {
           iArray.innerHTML += '<div><strong>' + idx + ': </strong>' + value + '</div>';
         }
       );
 
-      var iObject = document.getElementById('iterate_object');
+      let iObject = document.getElementById('iterate_object');
       CubeIteratorBehavior.iterate(
-        {property1: 'value one', property2: 'value two'}, function (value, idx)
-        {
+        {property1: 'value one', property2: 'value two'}, function (value, idx) {
           iObject.innerHTML += '<div><strong>' + idx + ': </strong>' + value + '</div>';
         }
       );
 
-      var iElements = document.getElementById('iterate_elements');
+      let iElements = document.getElementById('iterate_elements');
       CubeIteratorBehavior.iterate(
-        document.getElementsByClassName('ele'), function (value, idx)
-        {
+        document.getElementsByClassName('ele'), function (value, idx) {
           iElements.innerHTML += '<div><strong>' + idx + ': </strong>' + value.innerText + '</div>';
         }
       );
