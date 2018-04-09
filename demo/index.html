@@ -5,47 +5,55 @@
   <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
   <title>cube-behavior Demo</title>
   <script src="../../@webcomponents/webcomponentsjs/webcomponents-lite.js"></script>
-  <script type="module" src="../cube-iterator-behavior.js"></script>
-  <script type="module" src="../cube-element-path-behavior.js"></script>
+
+  <style>
+    body > .ele {
+      display: none;
+    }
+
+    body > div {
+      margin-bottom: 10px
+    }</style>
 </head>
-<body unresolved>
+<body>
 
-<div id="iterate_array"></div>
-<div id="iterate_object"></div>
-<div id="iterate_elements"></div>
-<div class="ele" style="display:none">element 1</div>
-<div class="ele" style="display:none">element 2</div>
+<div id="iterate_array"><strong>Iterate Array:</strong></div>
+<div id="iterate_object"><strong>Iterate Object:</strong></div>
+<div id="iterate_elements"><strong>Iterate Elements:</strong></div>
+<div id="iterate_path"><strong>Iterate Path:</strong></div>
 
-<script>
-  import {CubeIteratorBehavior} from "../cube-iterator-behavior";
-  import {CubeElementPathBehavior} from "../cube-element-path-behavior";
+<div class="ele">element 1</div>
+<div class="ele">element 2</div>
 
-  setTimeout(
-    function () {
-      let iArray = document.getElementById('iterate_array');
-      CubeIteratorBehavior.iterate(
-        ['one', 'two', 'three'], function (value, idx) {
-          iArray.innerHTML += '<div><strong>' + idx + ': </strong>' + value + '</div>';
-        }
-      );
+<script type="module">
+  import {CubeIteratorBehavior} from "../cube-iterator-behavior.js";
+  import {CubeElementPathBehavior} from "../cube-element-path-behavior.js";
 
-      let iObject = document.getElementById('iterate_object');
-      CubeIteratorBehavior.iterate(
-        {property1: 'value one', property2: 'value two'}, function (value, idx) {
-          iObject.innerHTML += '<div><strong>' + idx + ': </strong>' + value + '</div>';
-        }
-      );
-
-      let iElements = document.getElementById('iterate_elements');
-      CubeIteratorBehavior.iterate(
-        document.getElementsByClassName('ele'), function (value, idx) {
-          iElements.innerHTML += '<div><strong>' + idx + ': </strong>' + value.innerText + '</div>';
-        }
-      );
-
-      console.debug(CubeElementPathBehavior.getPath(iObject));
-    }, 500
+  let iArray = document.getElementById('iterate_array');
+  CubeIteratorBehavior.iterate(
+    ['one', 'two', 'three'], function (value, idx) {
+      iArray.innerHTML += '<div><strong>' + idx + ': </strong>' + value + '</div>';
+    }
   );
+
+  let iObject = document.getElementById('iterate_object');
+  CubeIteratorBehavior.iterate(
+    {property1: 'value one', property2: 'value two'}, function (value, idx) {
+      iObject.innerHTML += '<div><strong>' + idx + ': </strong>' + value + '</div>';
+    }
+  );
+
+  let iElements = document.getElementById('iterate_elements');
+  CubeIteratorBehavior.iterate(
+    document.getElementsByClassName('ele'), function (value, idx) {
+      iElements.innerHTML += '<div><strong>' + idx + ': </strong>' + value.innerText + '</div>';
+    }
+  );
+
+  let iPath = document.getElementById('iterate_path');
+  CubeIteratorBehavior.iterate(CubeElementPathBehavior.getPath(iObject), function (value, idx) {
+    iPath.innerHTML += '<div><strong>' + idx + ': </strong>' + value.tagName + '</div>';
+  });
 </script>
 
 </body>

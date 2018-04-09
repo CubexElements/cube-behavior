@@ -1,5 +1,3 @@
-import '../polymer/polymer.js';
-
 /** @polymerBehavior */
 export const CubeElementPathBehavior = {
   getPath: function (element) {

@@ -1,5 +1,3 @@
-import '../polymer/polymer.js';
-
 /** @polymerBehavior */
 export const CubeIteratorBehavior = {
   iterate: function (arr, callback) {
