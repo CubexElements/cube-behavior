@@ -1,4 +1,7 @@
-/** @polymerBehavior */
+/**
+ * @polymerBehavior
+ * @type {{iterate: CubeIteratorBehavior.iterate}}
+ */
 export const CubeIteratorBehavior = {
   iterate: function (arr, callback) {
     let i, superClass,

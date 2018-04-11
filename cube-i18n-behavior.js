@@ -1,7 +1,7 @@
-import "../iron-ajax/iron-ajax.js";
-import {CubeIteratorBehavior} from "cube-iterator-behavior.js";
+import "@polymer/iron-ajax/iron-ajax.js";
+import {CubeIteratorBehavior} from "./cube-iterator-behavior.js";
 
-import IntlMessageFormat from "intl-messageformat/dist/intl-messageformat.min.js";
+import IntlMessageFormat from "intl-messageformat/src/main.js";
 
 /** @polymerBehavior */
 export const CubeI18nBehavior = [
@@ -214,11 +214,11 @@ export const CubeI18nBehavior = [
     /**
      * Returns a computed `i18n` method, based on the browser languages.
      */
-    __computeI18n: function (languages, resources, formats) {
+    __computeI18n (languages, resources, formats) {
       let
         self = this,
         proto = this.constructor.prototype;
-
+console.log('compute i18n',languages,resources,formats);
       // Everytime any of the parameters change, invalidate the strings cache.
       proto.__localizationCache.messages = {};
 
@@ -229,7 +229,7 @@ export const CubeI18nBehavior = [
       };
     },
 
-    __computeI18nResource: function (languages, formats) {
+    __computeI18nResource (languages, formats) {
       let self = this;
       return function () {
         let args = [];

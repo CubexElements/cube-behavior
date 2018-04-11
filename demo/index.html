@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
   <title>cube-behavior Demo</title>
-  <script src="../../@webcomponents/webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-lite.js"></script>
 
   <style>
     body > .ele {
@@ -26,8 +26,7 @@
 <div class="ele">element 2</div>
 
 <script type="module">
-  import {CubeIteratorBehavior} from "../cube-iterator-behavior.js";
-  import {CubeElementPathBehavior} from "../cube-element-path-behavior.js";
+  import {CubeIteratorBehavior, CubeElementPathBehavior} from "../cube-behaviors.js";
 
   let iArray = document.getElementById('iterate_array');
   CubeIteratorBehavior.iterate(

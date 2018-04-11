@@ -1,4 +1,4 @@
-import {CubeIteratorBehavior} from "cube-iterator-behavior.js";
+import {CubeIteratorBehavior} from "./cube-iterator-behavior.js";
 
 /** @polymerBehavior */
 export const CubeTextContentBehavior = [

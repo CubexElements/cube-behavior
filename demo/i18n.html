@@ -4,16 +4,23 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
   <title>cube-behavior Demo</title>
-  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
-  <link rel="import" href="../../polymer/polymer.html">
-  <link rel="import" href="../cube-behaviors.js">
+  <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-lite.js"></script>
 </head>
-<body unresolved>
+<body>
 
-<x-translate></x-translate>
-<dom-module id="x-translate">
-  <template>
+<demo-translate></demo-translate>
 
+<script type="module">
+  import {CubeI18nBehavior} from "../cube-i18n-behavior.js";
+  import {PolymerElement, html} from "@polymer/polymer/polymer-element.js";
+  import {mixinBehaviors} from '@polymer/polymer/lib/legacy/class.js';
+
+  class DemoTranslate extends mixinBehaviors([CubeI18nBehavior], PolymerElement) {
+    static get is() {return "demo-translate";}
+
+    static get template()
+    {
+      return html`
     <strong>Languages: {{languages}}</strong>
     <br/>
     <strong>Translation: {{i18n('colour','name','Tom','age',34,'banannas',3,'gender','male')}}</strong>
@@ -25,83 +32,79 @@
     <strong>Custom Resources: {{i18nResource(customResource,'name','Tom','age',34)}}</strong>
     <br/>
     <strong>Custom Resources data: {{i18nResourceData(customResource,dataTest)}}</strong>
+`;
+    }
 
-  </template>
-
-  <script>
-    Polymer(
-      {
-        is:         "x-translate",
-        behaviors:  [
-          Polymer.CubeI18nBehavior
-        ],
-        properties: {
-          dataTest:       {
-            type:  Object,
-            value: function () {return {name: 'Tom', age: 34, banannas: 3, gender: 'male'};}
-          },
-          failovers:      {
-            type:  Array,
-            value: ['missing', 'failover']
-          },
-          customResource: {
-            type:  Object,
-            value: {
-              'en': '{name} is {age}'
-            }
-          },
-          resources:      {
-            type:  Object,
-            value: {
-              'en-GB': {
-                'colour': '{name} is {age}, {name} ate {banannas, plural, =0 {no bananas} =1 {a banana} other {# bananas}} {gender, select, male {at his house.} female {at her house.} other {at their house.}}'
-              },
-              'en':    {
-                'colour':   '{name} ate {banannas, plural, =0 {no bananas} =1 {a banana} other {# bananas}} {gender, select, male {at his house.} female {at her house.} other{at their house.}}',
-                'failover': "Failover Content"
-              },
-              'fr':    {
-                'colour': '{name} est {age}, {name} {banannas, plural, =0 {n\'y a pas de bananes} =1 {mangé une banane} other {mangé # bananes}} {gender, select, male {à son domicile.} female {chez elle.} other {à leur maison.}}'
-              }
+    static get properties()
+    {
+      return {
+        dataTest:       {
+          type:  Object,
+          value: function () {return {name: 'Tom', age: 34, banannas: 3, gender: 'male'};}
+        },
+        failovers:      {
+          type:  Array,
+          value: ['missing', 'failover']
+        },
+        customResource: {
+          type:  Object,
+          value: {
+            'en': '{name} is {age}'
+          }
+        },
+        resources:      {
+          type:  Object,
+          value: {
+            'en-GB': {
+              'colour': '{name} is {age}, {name} ate {banannas, plural, =0 {no bananas} =1 {a banana} other {# bananas}} {gender, select, male {at his house.} female {at her house.} other {at their house.}}'
+            },
+            'en':    {
+              'colour':   '{name} ate {banannas, plural, =0 {no bananas} =1 {a banana} other {# bananas}} {gender, select, male {at his house.} female {at her house.} other{at their house.}}',
+              'failover': "Failover Content"
+            },
+            'fr':    {
+              'colour': '{name} est {age}, {name} {banannas, plural, =0 {n\'y a pas de bananes} =1 {mangé une banane} other {mangé # bananes}} {gender, select, male {à son domicile.} female {chez elle.} other {à leur maison.}}'
             }
           }
         }
       }
-    );
-  </script>
-</dom-module>
+    }
+  }
+
+  customElements.define(DemoTranslate.is, DemoTranslate);
+</script>
 
 <hr/>
 
-<xr-translate></xr-translate>
-<dom-module id="xr-translate">
-  <template>
+<demo-remote-translate></demo-remote-translate>
+<script type="module">
+  import {CubeI18nBehavior} from "../cube-i18n-behavior.js";
+  import {PolymerElement, html} from "@polymer/polymer/polymer-element.js";
+  import {mixinBehaviors} from '@polymer/polymer/lib/legacy/class.js';
 
-    <strong>Remote Translation: {{i18n('colour','name','Tom','age',34,'banannas',3,'gender','male')}}</strong>
+  class DemoRemoteTranslate extends mixinBehaviors([CubeI18nBehavior], PolymerElement) {
+    static get is() {return "demo-remote-translate";}
 
-  </template>
+    static get template() {return html`<strong>Remote Translation: {{i18n('colour','name','Tom','age',34,'banannas',3,'gender','male')}}</strong>`};
 
-  <script>
-    Polymer(
-      {
-        is:         "xr-translate",
-        behaviors:  [
-          Polymer.CubeI18nBehavior
-        ],
-        properties: {
-          languages: {
-            type:  Array,
-            value: ["de"]
-          }
-        },
-        attached:   function ()
-                    {
-                      this.loadResources(this.resolveUrl('de.json'));
-                    }
+    static get properties()
+    {
+      return {
+        languages: {
+          type:  Array,
+          value: ["de"]
+        }
       }
-    );
-  </script>
-</dom-module>
+    }
+
+    attached()
+    {
+      this.loadResources(this.resolveUrl('de.json'));
+    }
+  }
+
+  customElements.define(DemoRemoteTranslate.is, DemoRemoteTranslate);
+</script>
 
 </body>
 </html>
