@@ -2,7 +2,10 @@
   "name": "@kubex/cube-behaviors",
   "flat": true,
   "version": "3.0.0-pre.1",
-  "repository": "https://github.com/cubexelements/cube-behavior",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CubexElements/cube-behaviors"
+  },
   "author": "The Polymer Project Authors",
   "license": "BSD-3-Clause",
   "dependencies": {
