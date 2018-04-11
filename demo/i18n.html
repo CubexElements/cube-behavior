@@ -13,10 +13,11 @@
 <script type="module">
   import {CubeI18nBehavior} from "../cube-i18n-behavior.js";
   import {PolymerElement, html} from "@polymer/polymer/polymer-element.js";
-  import {mixinBehaviors} from '@polymer/polymer/lib/legacy/class.js';
 
-  class DemoTranslate extends mixinBehaviors([CubeI18nBehavior], PolymerElement) {
+  class DemoTranslate extends PolymerElement {
     static get is() {return "demo-translate";}
+
+    static get behaviors() {return [CubeI18nBehavior];}
 
     static get template()
     {
@@ -80,10 +81,11 @@
 <script type="module">
   import {CubeI18nBehavior} from "../cube-i18n-behavior.js";
   import {PolymerElement, html} from "@polymer/polymer/polymer-element.js";
-  import {mixinBehaviors} from '@polymer/polymer/lib/legacy/class.js';
 
-  class DemoRemoteTranslate extends mixinBehaviors([CubeI18nBehavior], PolymerElement) {
+  class DemoRemoteTranslate extends PolymerElement {
     static get is() {return "demo-remote-translate";}
+
+    static get behaviors() {return [CubeI18nBehavior];}
 
     static get template() {return html`<strong>Remote Translation: {{i18n('colour','name','Tom','age',34,'banannas',3,'gender','male')}}</strong>`};
 
