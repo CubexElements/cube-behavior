@@ -1,7 +1,7 @@
 {
   "name": "@kubex/cube-behaviors",
   "flat": true,
-  "version": "3.0.0-pre.2",
+  "version": "3.0.0-pre.3",
   "repository": {
     "type": "git",
     "url": "https://github.com/CubexElements/cube-behaviors"
