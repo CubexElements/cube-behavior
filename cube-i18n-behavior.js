@@ -2,112 +2,118 @@ import "@polymer/iron-ajax/iron-ajax.js";
 import {CubeIteratorBehavior} from "./cube-iterator-behavior.js";
 
 import IntlMessageFormat from "intl-messageformat/src/main.js";
+import {dedupingMixin} from "@polymer/polymer/lib/utils/mixin";
 
 /** @polymerBehavior */
-export const CubeI18nBehavior = [
-  CubeIteratorBehavior,
-  {
-    __localizationCache: {
-      requests: {}, /* One iron-request per unique resources path. */
-      messages: {}, /* Unique localized strings. Invalidated when the language, formats or resources change. */
-      ajax:     null     /* Global iron-ajax object used to request resource files. */
-    },
-    properties:          {
-      languages: {
-        type:  Array,
-        value: function () {return Array.prototype.slice.call(navigator.languages)}
-      },
-      /**
-       * The dictionary of localized messages, for each of the languages that
-       * are going to be used. See http://formatjs.io/guides/message-syntax/ for
-       * more information on the message syntax.
-       *
-       * For example, a valid dictionary would be:
-       * this.resources = {
+export const CubeI18nBehavior = dedupingMixin(superClass => {
+  class CubeI18nBehavior extends CubeIteratorBehavior(superClass) {
+    static get properties()
+    {
+      return {
+        languages: {
+          type:  Array,
+          value: function () {return Array.prototype.slice.call(navigator.languages)}
+        },
+        /**
+         * The dictionary of localized messages, for each of the languages that
+         * are going to be used. See http://formatjs.io/guides/message-syntax/ for
+         * more information on the message syntax.
+         *
+         * For example, a valid dictionary would be:
+         * this.resources = {
          *  'en': { 'greeting': 'Hello!' }, 'fr' : { 'greeting': 'Bonjour!' }
          * }
-       */
-      resources: {
-        type: Object
-      },
+         */
+        resources: {
+          type: Object
+        },
 
-      /**
-       * The path to the dictionary of localized messages. The format is the
-       * same as the `resources` array, only saved as an external json file.
-       * Note that using a path will populate the `resources` property, and override
-       * the previous data.
-       */
-      pathToResources: {
-        type: String
-      },
+        /**
+         * The path to the dictionary of localized messages. The format is the
+         * same as the `resources` array, only saved as an external json file.
+         * Note that using a path will populate the `resources` property, and override
+         * the previous data.
+         */
+        pathToResources: {
+          type: String
+        },
 
-      /**
-       * Optional dictionary of user defined formats, as explained here:
-       * http://formatjs.io/guides/message-syntax/#custom-formats
-       *
-       * For example, a valid dictionary of formats would be:
-       * this.formats = {
+        /**
+         * Optional dictionary of user defined formats, as explained here:
+         * http://formatjs.io/guides/message-syntax/#custom-formats
+         *
+         * For example, a valid dictionary of formats would be:
+         * this.formats = {
          *    number: { USD: { style: 'currency', currency: 'USD' } }
          * }
-       */
-      formats: {
-        type:  Object,
-        value: function () { return {} }
-      },
+         */
+        formats: {
+          type:  Object,
+          value: function () { return {} }
+        },
 
-      /**
-       * Translates a string to the current `language`. Any parameters to the
-       * string should be passed in order, as follows:
-       * `i18n(stringKey, param1Name, param1Value, param2Name, param2Value)`
-       */
-      i18n: {
-        type:     Function,
-        computed: '__computeI18n(languages, resources, formats)'
-      },
+        /**
+         * Translates a string to the current `language`. Any parameters to the
+         * string should be passed in order, as follows:
+         * `i18n(stringKey, param1Name, param1Value, param2Name, param2Value)`
+         */
+        i18n: {
+          type:     Function,
+          computed: '__computeI18n(languages, resources, formats)'
+        },
 
-      /**
-       * Translates a string to the current `language`. Any parameters to the
-       * string should be passed in order, as follows:
-       * `i18nResource(resources, param1Name, param1Value, param2Name, param2Value)`
-       */
-      i18nResource: {
-        type:     Function,
-        computed: '__computeI18nResource(languages, formats)'
-      },
+        /**
+         * Translates a string to the current `language`. Any parameters to the
+         * string should be passed in order, as follows:
+         * `i18nResource(resources, param1Name, param1Value, param2Name, param2Value)`
+         */
+        i18nResource: {
+          type:     Function,
+          computed: '__computeI18nResource(languages, formats)'
+        },
 
-      /**
-       * Translates a string to the current `language`. Any parameters to the
-       * string should be passed in an object, as follows:
-       * `i18n(stringKey, keyValue)`
-       */
-      i18nData: {
-        type:     Function,
-        computed: '__computeI18nData(i18n)'
-      },
+        /**
+         * Translates a string to the current `language`. Any parameters to the
+         * string should be passed in an object, as follows:
+         * `i18n(stringKey, keyValue)`
+         */
+        i18nData: {
+          type:     Function,
+          computed: '__computeI18nData(i18n)'
+        },
 
-      /**
-       * Translates a string to the current `language`. Any parameters to the
-       * string should be passed in an object, as follows:
-       * `i18n(resources, keyValue)`
-       */
-      i18nResourceData: {
-        type:     Function,
-        computed: '__computeI18nData(i18nResource)'
+        /**
+         * Translates a string to the current `language`. Any parameters to the
+         * string should be passed in an object, as follows:
+         * `i18n(resources, keyValue)`
+         */
+        i18nResourceData: {
+          type:     Function,
+          computed: '__computeI18nData(i18nResource)'
+        },
+
+        __localizationCache: {
+          type:  Object,
+          value: {
+            requests: {}, /* One iron-request per unique resources path. */
+            messages: {}, /* Unique localized strings. Invalidated when the language, formats or resources change. */
+            ajax:     null     /* Global iron-ajax object used to request resource files. */
+          }
+        }
       }
-    },
+    }
 
-    loadResources: function (path) {
-      let proto = this.constructor.prototype;
-
+    loadResources(path)
+    {
       // If the global ajax object has not been initialized, initialize and cache it.
-      let ajax = proto.__localizationCache.ajax;
+      let ajax = this.__localizationCache.ajax;
       if(!ajax)
       {
         //noinspection JSValidateTypes
-        ajax = proto.__localizationCache.ajax = document.createElement('iron-ajax');
+        ajax = this.__localizationCache.ajax = document.createElement('iron-ajax');
       }
 
-      let request = proto.__localizationCache.requests[path];
+      let request = this.__localizationCache.requests[path];
       if(!request)
       {
         ajax.url = path;
@@ -119,7 +125,7 @@ export const CubeI18nBehavior = [
         );
 
         // Cache the instance so that it can be reused if the same path is loaded.
-        proto.__localizationCache.requests[path] = request;
+        this.__localizationCache.requests[path] = request;
       }
       else
       {
@@ -128,10 +134,10 @@ export const CubeI18nBehavior = [
           this.__onRequestError.bind(this)
         );
       }
-    },
+    }
 
-    __getTranslation: function (
-      passedArguments, resources, languages, formats, cache) {
+    __getTranslation(passedArguments, resources, languages, formats, cache)
+    {
       let
         self = this,
         keys = passedArguments[0];
@@ -209,27 +215,28 @@ export const CubeI18nBehavior = [
         args[passedArguments[i]] = passedArguments[i + 1];
       }
       return msg.format(args);
-    },
+    }
 
     /**
      * Returns a computed `i18n` method, based on the browser languages.
      */
-    __computeI18n (languages, resources, formats) {
+    __computeI18n(languages, resources, formats)
+    {
       let
-        self = this,
-        proto = this.constructor.prototype;
-console.log('compute i18n',languages,resources,formats);
+        self = this;
       // Everytime any of the parameters change, invalidate the strings cache.
-      proto.__localizationCache.messages = {};
+
+      this.__localizationCache.messages = {};
 
       return function () {
         return self.__getTranslation(
-          arguments, resources, languages, formats, proto.__localizationCache
+          arguments, resources, languages, formats, this.__localizationCache
         )
       };
-    },
+    }
 
-    __computeI18nResource (languages, formats) {
+    __computeI18nResource(languages, formats)
+    {
       let self = this;
       return function () {
         let args = [];
@@ -254,9 +261,10 @@ console.log('compute i18n',languages,resources,formats);
         }
         return self.__getTranslation(args, newResources, languages, formats);
       };
-    },
+    }
 
-    __computeI18nData: function (i18n) {
+    __computeI18nData(i18n)
+    {
       return function () {
         if(!i18n)
         {
@@ -276,18 +284,21 @@ console.log('compute i18n',languages,resources,formats);
         args.unshift(stringKey);
         return i18n.apply(this, args);
       }
-    },
+    }
 
-    __onRequestResponse: function (event) {
+    __onRequestResponse(event)
+    {
       this.resources = event.response;
-      this.fire('cube-i18n-resources-loaded');
-    },
+      this.dispatchEvent(new CustomEvent('cube-i18n-resources-loaded'));
+    }
 
-    __onRequestError: function (event) {
-      this.fire('cube-i18n-resources-error');
-    },
+    __onRequestError(event)
+    {
+      this.dispatchEvent(new CustomEvent('cube-i18n-resources-error'));
+    }
 
-    hydrateResources: function (data, clear) {
+    hydrateResources(data, clear)
+    {
       let
         self = this,
         resources = clear ? {} : self.resources;
@@ -315,4 +326,6 @@ console.log('compute i18n',languages,resources,formats);
       this.resources = resources;
     }
   }
-];
+
+  return CubeI18nBehavior;
+});

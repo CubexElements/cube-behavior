@@ -11,13 +11,11 @@
 <demo-translate></demo-translate>
 
 <script type="module">
-  import {CubeI18nBehavior} from "../cube-i18n-behavior.js";
   import {PolymerElement, html} from "@polymer/polymer/polymer-element.js";
+  import {CubeI18nBehavior} from "../cube-i18n-behavior.js";
 
-  class DemoTranslate extends PolymerElement {
+  class DemoTranslate extends CubeI18nBehavior(PolymerElement) {
     static get is() {return "demo-translate";}
-
-    static get behaviors() {return [CubeI18nBehavior];}
 
     static get template()
     {
@@ -79,13 +77,11 @@
 
 <demo-remote-translate></demo-remote-translate>
 <script type="module">
-  import {CubeI18nBehavior} from "../cube-i18n-behavior.js";
   import {PolymerElement, html} from "@polymer/polymer/polymer-element.js";
+  import {CubeI18nBehavior} from "../cube-i18n-behavior.js";
 
-  class DemoRemoteTranslate extends PolymerElement {
+  class DemoRemoteTranslate extends CubeI18nBehavior(PolymerElement) {
     static get is() {return "demo-remote-translate";}
-
-    static get behaviors() {return [CubeI18nBehavior];}
 
     static get template() {return html`<strong>Remote Translation: {{i18n('colour','name','Tom','age',34,'banannas',3,'gender','male')}}</strong>`};
 
@@ -99,8 +95,9 @@
       }
     }
 
-    attached()
+    connectedCallback()
     {
+      super.connectedCallback();
       this.loadResources(this.resolveUrl('de.json'));
     }
   }

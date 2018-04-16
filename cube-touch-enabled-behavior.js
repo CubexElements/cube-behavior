@@ -1,17 +1,28 @@
+import {dedupingMixin} from "@polymer/polymer/lib/utils/mixin.js";
+
 /** @polymerBehavior */
-export const CubeTouchEnabledBehavior = {
-  properties:    {
-    _isTouchDevice: {type: Boolean, value: function () {return this._touchEnabled();}}
-  },
-  _touchEnabled: function () {
-    try
+export const CubeTouchEnabledBehavior = dedupingMixin(superClass => {
+  class CubeTouchEnabledBehavior extends superClass {
+    static get properties()
     {
-      document.createEvent('TouchEvent');
-      return true;
+      return {
+        _isTouchDevice: {type: Boolean, value: function () {return this._touchEnabled();}}
+      }
     }
-    catch(e)
+
+    _touchEnabled()
     {
-      return false;
+      try
+      {
+        document.createEvent('TouchEvent');
+        return true;
+      }
+      catch(e)
+      {
+        return false;
+      }
     }
   }
-};
+
+  return CubeTouchEnabledBehavior;
+});
